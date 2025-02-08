@@ -20,6 +20,10 @@ Route::middleware('auth')->group(function () {
     Route::prefix('master')->group(function () {
         Route::resource('users', \App\Http\Controllers\UserController::class);
         Route::put('/users/{user}/role', [\App\Http\Controllers\UserController::class, 'updateRole'])->name('users.updateRole');
+        Route::resource('buku', \App\Http\Controllers\Master\BukuController::class);
+        // Route::resource('kategori', \App\Http\Controllers\Master\KategoriController::class);
+        // Route::resource('penulis', \App\Http\Controllers\Master\PenulisController::class);
+        // Route::resource('penerbit', \App\Http\Controllers\Master\PenerbitController::class);
     });
 });
 
