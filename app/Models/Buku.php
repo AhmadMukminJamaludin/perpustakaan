@@ -11,7 +11,7 @@ class Buku extends Model
     use HasUuids, SoftDeletes;
 
     protected $table = 'buku';
-    protected $fillable = ['isbn', 'judul', 'kategori_id', 'penulis_id', 'penerbit_id', 'tahun_terbit', 'stok', 'harga'];
+    protected $fillable = ['isbn', 'judul', 'kategori_id', 'penulis_id', 'penerbit_id', 'tahun_terbit', 'stok', 'path'];
 
     public function kategori()
     {

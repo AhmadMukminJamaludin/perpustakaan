@@ -38,7 +38,7 @@
                         <li class="nav-item">
                             <a href="{{ route('users.index') }}" class="nav-link {{ request()->is('master/users*') ? 'active' : '' }}">
                                 <i class="fas fa-users nav-icon"></i>
-                                <p>Pengguna</p>
+                                <p>Anggota</p>
                             </a>
                         </li>
                         <li class="nav-item">

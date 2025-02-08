@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <div class="card card-default">
                 <div class="card-header">
                     <h3 class="card-title">Daftar Buku</h3>
                     <div class="card-tools">
@@ -20,12 +20,12 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
+                                <th>Sampul</th>
                                 <th>Judul Buku</th>
                                 <th>Kategori</th>
                                 <th>Penulis</th>
                                 <th>Tahun</th>
                                 <th>Stok</th>
-                                <th>Harga</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -33,6 +33,15 @@
                             @foreach($buku as $index => $item)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
+                                <td class="text-center align-middle">
+                                    @php
+                                        $sampulUrl = 'https://placehold.jp/200x200.png';
+                                        if(isset($item) && !empty($item->path) && file_exists(public_path('storage/' . $item->path))){
+                                            $sampulUrl = asset('storage/' . $item->path);
+                                        }
+                                    @endphp
+                                    <img id="sampulPreview" src="{{ $sampulUrl }}" alt="Preview Sampul" style="max-height: 75px;">
+                                </td>
                                 <td>{{ $item->judul }} <br>
                                     <small><b>Penerbit:</b> {{ $item->penerbit->nama }}</small> <br>
                                     <small><b>ISBN:</b> {{ $item->isbn }}</small>
@@ -41,7 +50,6 @@
                                 <td>{{ $item->penulis->nama }}</td>
                                 <td>{{ $item->tahun_terbit }}</td>
                                 <td>{{ $item->stok }}</td>
-                                <td>Rp{{ number_format($item->harga, 0, ',', '.') }}</td>
                                 <td>
                                     <a href="{{ route('buku.edit', $item->id) }}" class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i> Edit
