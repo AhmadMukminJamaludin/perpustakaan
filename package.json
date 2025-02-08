@@ -17,7 +17,10 @@
         "vite": "^6.0.11"
     },
     "dependencies": {
+        "@vitejs/plugin-react": "^4.3.4",
         "admin-lte": "^4.0.0-beta3",
-        "bootstrap": "^5.3.3"
+        "bootstrap": "^5.3.3",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0"
     }
 }
