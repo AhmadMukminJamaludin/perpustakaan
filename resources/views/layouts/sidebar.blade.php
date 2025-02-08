@@ -19,12 +19,15 @@
                     </a>
                 </li>
 
-                <!-- Master Data -->
                 @php
-                    $masterActive = request()->is('master/users*') || request()->is('master/buku*');
+                    $masterActive = request()->is('master/users*') ||
+                                    request()->is('master/kategori*') ||
+                                    request()->is('master/penerbit*') ||
+                                    request()->is('master/penulis*') ||
+                                    request()->is('master/buku*');
                 @endphp
                 <li class="nav-item has-treeview {{ $masterActive ? 'menu-open' : '' }}">
-                    <a href="#" class="nav-link active {{ $masterActive ? 'active' : '' }}">
+                    <a href="#" class="nav-link {{ $masterActive ? 'active' : '' }}">
                         <i class="nav-icon fas fa-database"></i>
                         <p>
                             Master Data
@@ -38,6 +41,24 @@
                                 <p>Pengguna</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('kategori.index') }}" class="nav-link {{ request()->is('master/kategori*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>Master Kategori</p>
+                            </a>
+                        </li>                        
+                        <li class="nav-item">
+                            <a href="{{ route('penerbit.index') }}" class="nav-link {{ request()->is('master/penerbit*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>Master Penerbit</p>
+                            </a>
+                        </li>                        
+                        <li class="nav-item">
+                            <a href="{{ route('penulis.index') }}" class="nav-link {{ request()->is('master/penulis*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>Master Penulis</p>
+                            </a>
+                        </li>                        
                         <li class="nav-item">
                             <a href="{{ route('buku.index') }}" class="nav-link {{ request()->is('master/buku*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-book"></i>
