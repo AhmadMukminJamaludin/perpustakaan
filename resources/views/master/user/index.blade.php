@@ -21,7 +21,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>No.</th>
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Hak Akses</th>
@@ -31,14 +31,14 @@
             <tbody>
                 @foreach($users as $user)
                 <tr>
-                    <td>{{ $user->id }}</td>
+                    <td>{{ $loop->index + 1 }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>
                         <form action="{{ route('users.updateRole', $user->id) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <select name="role" class="form-select" onchange="this.form.submit()">
+                            <select name="role" class="form-control" onchange="this.form.submit()">
                                 <option value="pengunjung" {{ $user->hasRole('pengunjung') ? 'selected' : '' }}>Pengunjung</option>
                                 <option value="admin" {{ $user->hasRole('admin') ? 'selected' : '' }}>Admin</option>
                             </select>
