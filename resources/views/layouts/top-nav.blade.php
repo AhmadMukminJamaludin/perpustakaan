@@ -42,6 +42,15 @@
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
+    <div class="content-header">
+        <div class="container">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0"><small>@yield('title')</small></h1>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="content">
       <div class="container">
         @yield('content')
@@ -52,9 +61,6 @@
 
   <!-- Main Footer -->
   <footer class="main-footer">
-    <div class="float-right d-none d-sm-inline">
-      Informasi tambahan
-    </div>
     <strong>&copy; {{ date('Y') }} {{ config('app.name', 'Perpustakaan Online') }}.</strong> All rights reserved.
   </footer>
 </div>

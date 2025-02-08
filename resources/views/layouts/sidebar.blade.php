@@ -1,7 +1,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{ url('/dashboard') }}" class="brand-link">
-        <i class="fas fa-home brand-image img-circle elevation-3"></i>
+        <i class="fas fa-book brand-image img-circle"></i>
         <span class="brand-text font-weight-light">{{ config('app.name') }}</span>
     </a>
 

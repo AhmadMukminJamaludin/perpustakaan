@@ -7,44 +7,32 @@ use App\Models\Kategori;
 use App\Models\Penulis;
 use App\Models\Penerbit;
 use App\Models\Buku;
-use Illuminate\Support\Str;
+use Faker\Factory as Faker;
 
 class BukuSeeder extends Seeder
 {
     public function run()
     {
-        $kategori = Kategori::create([
-            'id' => Str::uuid(),
-            'nama' => 'Teknologi',
-            'deskripsi' => 'Buku tentang teknologi dan pemrograman.'
-        ]);
+        $faker = Faker::create();
 
-        $penulis = Penulis::create([
-            'id' => Str::uuid(),
-            'nama' => 'John Doe',
-            'email' => 'johndoe@example.com',
-            'telepon' => '081234567890',
-            'bio' => 'Penulis buku teknologi terkenal.'
-        ]);
+        // Misal, kita ingin membuat 20 data buku
+        for ($i = 0; $i < 20; $i++) {
+            // Ambil data random dari kategori, penulis, dan penerbit
+            $kategori = Kategori::inRandomOrder()->first();
+            $penulis = Penulis::inRandomOrder()->first();
+            $penerbit = Penerbit::inRandomOrder()->first();
 
-        $penerbit = Penerbit::create([
-            'id' => Str::uuid(),
-            'nama' => 'Tech Publishing',
-            'email' => 'contact@techpublishing.com',
-            'telepon' => '0211234567',
-            'alamat' => 'Jl. Teknologi No. 123'
-        ]);
-
-        Buku::create([
-            'id' => Str::uuid(),
-            'isbn' => '9781234567890',
-            'judul' => 'Pemrograman Laravel',
-            'kategori_id' => $kategori->id,
-            'penulis_id' => $penulis->id,
-            'penerbit_id' => $penerbit->id,
-            'tahun_terbit' => 2024,
-            'stok' => 100,
-            'harga' => 150000
-        ]);
+            Buku::create([
+                'isbn'         => $faker->unique()->isbn13,
+                'judul'        => $faker->sentence(3),
+                'kategori_id'  => $kategori ? $kategori->id : null,
+                'penulis_id'   => $penulis ? $penulis->id : null,
+                'penerbit_id'  => $penerbit ? $penerbit->id : null,
+                'tahun_terbit' => $faker->numberBetween(1900, date('Y')),
+                'stok'         => $faker->numberBetween(1, 100),
+                // Karena belum ada unggahan sampul, bisa disimpan null atau gunakan placeholder.
+                'path'         => null,
+            ]);
+        }
     }
 }

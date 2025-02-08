@@ -1,12 +1,15 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return Auth::check() ? redirect('/dashboard') : view('landing');
-});
+Route::get('/', function (Request $request) {
+    return Auth::check()
+        ? redirect('/dashboard')
+        : app(\App\Http\Controllers\LandingController::class)->index($request);
+})->name('landing');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
