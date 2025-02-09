@@ -20,7 +20,10 @@ class LandingController extends Controller
 
         $bukuList = $query->paginate(9)->appends($request->all());
 
-        return view('landing', compact('bukuList'));
-    }
+        $bukuDipinjam = \App\Models\Peminjaman::where('status', '<>', 'Dikembalikan')
+            ->pluck('buku_id')
+            ->toArray();
 
+        return view('landing', compact('bukuList', 'bukuDipinjam'));
+    }
 }

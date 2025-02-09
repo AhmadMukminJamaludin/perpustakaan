@@ -38,14 +38,14 @@
                     </p>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-outline-primary btn-block btn-booking" data-id="{{ $buku->id }}">
-                        <i class="fas fa-shopping-cart mr-2"></i>
-                        Booking
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary btn-block">
-                        <i class="fas fa-search mr-2"></i>
-                        Detail
-                    </button>
+                    @if (in_array($buku->id, $bukuDipinjam))
+                        <button class="btn btn-secondary btn-block" disabled>Buku Sudah Dipinjam</button>
+                    @else
+                        <button class="btn btn-outline-primary btn-block btn-booking" data-id="{{ $buku->id }}">
+                            <i class="fas fa-shopping-cart mr-2"></i>
+                            Booking
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>

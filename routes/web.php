@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/peminjaman/store', [\App\Http\Controllers\PeminjamanController::class, 'store'])->name('peminjaman.store');
 
     Route::prefix('master')->group(function () {
         Route::resource('users', \App\Http\Controllers\UserController::class);
@@ -43,6 +44,14 @@ Route::middleware('auth')->group(function () {
         Route::resource('penerbit', \App\Http\Controllers\Master\PenerbitController::class);
         Route::resource('penulis', \App\Http\Controllers\Master\PenulisController::class)->parameters(['penulis' => 'penulis']);
     });    
+
+    Route::prefix('transaksi')->group(function () {
+        Route::get('/booking', [\App\Http\Controllers\Transaksi\BookingController::class, 'index'])->name('booking.index');
+        Route::get('/peminjaman', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'index'])->name('peminjaman.index');
+        Route::post('/peminjaman/verifikasi', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'verifikasiPeminjaman'])->name('peminjaman.verifikasi');
+        Route::post('/peminjaman/{id}/update', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'update'])->name('peminjaman.update');
+        Route::post('/peminjaman/kembalikan', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'kembalikan'])->name('peminjaman.kembalikan');
+    });
 });
 
 require __DIR__.'/auth.php';

@@ -136,7 +136,7 @@
                   var cartContent = '<div class="cart-items">';
                   cartItems.forEach(item => {
                       cartContent += `
-                          <div class="cart-item">
+                          <div class="cart-item" data-id="${item.id}">
                               <img src="${item.sampul}" alt="${item.judul}" class="cart-image"/>
                               <div class="cart-info">
                                   <h5>${item.judul}</h5>
@@ -159,7 +159,35 @@
                               text: 'Pinjam',
                               btnClass: 'btn-blue',
                               action: function () {
+                                var bukuIds = [];
+                                let cartItem = $(this).closest('.cart-item');
+                                this.$content.find('.cart-item').each(function () {
+                                    var id = $(this).data('id');
+                                    bukuIds.push(id);
+                                });
 
+                                if (bukuIds.length === 0) {
+                                    $.alert('Keranjang kosong.');
+                                    return false;
+                                }
+
+                                var tanggalPinjam = new Date().toISOString().split('T')[0];
+
+                                axios.post('{{ route('peminjaman.store') }}', {
+                                    buku_ids: bukuIds,
+                                    tanggal_pinjam: tanggalPinjam
+                                })
+                                .then(function (res) {
+                                    $.alert('Buku berhasil dipinjam!');
+                                    setInterval(() => {
+                                      window.location.reload();
+                                    }, 2000);
+                                })
+                                .catch(function (error) {
+                                    $.alert(error.response?.data?.message || "Terjadi kesalahan!");
+                                });
+
+                                return false;
                               }
                           },
                           close: {
@@ -170,7 +198,7 @@
                       }
                   });
 
-                  $(document).on('click', '.remove-from-cart', function () {
+                  $(document).off('click', '.remove-from-cart').on('click', '.remove-from-cart', function () {                    
                     var bukuId = $(this).data('id');
                     let cartItem = $(this).closest('.cart-item');
 
