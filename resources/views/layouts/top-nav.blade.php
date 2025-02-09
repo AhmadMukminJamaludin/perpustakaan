@@ -16,6 +16,28 @@
   <!-- jQuery ConfirmJS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+
+  <style>
+    .cart-items {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .cart-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .cart-image {
+        width: 60px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+    .cart-info {
+        flex-grow: 1;
+    }
+  </style>
   @vite(['resources/js/app.js'])
   @stack('styles')
 </head>
@@ -32,7 +54,7 @@
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">
           <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
               <li class="nav-item">
-                  <a class="nav-link" href="#">
+                  <a type="button" class="nav-link cart-button">
                       <i class="fa-solid fa-cart-shopping"></i>
                       <span class="badge badge-danger navbar-badge" id="cart-count"></span>
                   </a>
@@ -98,6 +120,76 @@
           }
       }
   }
+  
+  $(document).ready(function () {
+      // Event klik pada ikon keranjang
+      $('.cart-button').on('click', function () {
+          axios.get('{{ route('cart.view') }}') // Pastikan route ini sesuai dengan controller
+              .then(response => {
+                  var cartItems = response.data.cart_items;
+
+                  if (cartItems.length === 0) {
+                      $.alert('Keranjang kosong.');
+                      return;
+                  }
+
+                  var cartContent = '<div class="cart-items">';
+                  cartItems.forEach(item => {
+                      cartContent += `
+                          <div class="cart-item">
+                              <img src="${item.sampul}" alt="${item.judul}" class="cart-image"/>
+                              <div class="cart-info">
+                                  <h5>${item.judul}</h5>
+                                  <p>Penulis: ${item.penulis}</p>
+                                  <button class="btn btn-danger btn-sm remove-from-cart" data-id="${item.id}">Hapus</button>
+                              </div>
+                          </div>
+                          <hr>
+                      `;
+                  });
+                  cartContent += '</div>';
+
+                  // Tampilkan modal dengan isi cart
+                  $.confirm({
+                      title: 'Keranjang Buku',
+                      content: cartContent,
+                      columnClass: 'medium',
+                      buttons: {
+                          checkout: {
+                              text: 'Pinjam',
+                              btnClass: 'btn-blue',
+                              action: function () {
+
+                              }
+                          },
+                          close: {
+                              text: 'Tutup',
+                              btnClass: 'btn-red',
+                              action: function () {}
+                          }
+                      }
+                  });
+
+                  $(document).on('click', '.remove-from-cart', function () {
+                    var bukuId = $(this).data('id');
+                    let cartItem = $(this).closest('.cart-item');
+
+                      axios.post('{{ route('cart.remove') }}', { buku_id: bukuId })
+                          .then(response => {
+                              $.alert('Buku dihapus dari keranjang.');
+                              cartItem.remove();
+                              $('#cart-count').text(response.data.cart_count);
+                          })
+                          .catch(error => {
+                              $.alert('Gagal menghapus buku.');
+                          });
+                  });
+              })
+              .catch(error => {
+                  $.alert('Gagal mengambil data cart.');
+              });
+      });
+  });
 </script>
 
 @stack('scripts')

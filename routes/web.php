@@ -10,7 +10,9 @@ Route::get('/', [\App\Http\Controllers\LandingController::class, 'index'])->name
 Route::post('/cart/add', [\App\Http\Controllers\CartController::class, 'addToCart'])
     ->middleware('auth.booking')
     ->name('cart.add');
+Route::get('/cart/view', [\App\Http\Controllers\CartController::class, 'viewCart'])->name('cart.view');
 Route::get('/cart/count', [\App\Http\Controllers\CartController::class, 'cartCount'])->name('cart.count');
+Route::post('/cart/remove', [\App\Http\Controllers\CartController::class, 'removeFromCart'])->name('cart.remove');
 
 Route::get('/check-auth', function () {
     return response()->json(['authenticated' => Auth::check()]);
