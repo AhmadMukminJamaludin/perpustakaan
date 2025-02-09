@@ -38,14 +38,14 @@
                     </p>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-outline-primary btn-block">
+                    <button class="btn btn-outline-primary btn-block btn-booking" data-id="{{ $buku->id }}">
                         <i class="fas fa-shopping-cart mr-2"></i>
                         Booking
-                    </a>
-                    <a href="#" class="btn btn-outline-secondary btn-block">
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-block">
                         <i class="fas fa-search mr-2"></i>
                         Detail
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -107,3 +107,112 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function () {
+        // Fungsi untuk menambahkan buku ke cart
+        $('.btn-booking').on('click', function () {
+            var bukuId = $(this).data('id');
+
+            axios.post('{{ route('cart.add') }}', {
+                buku_id: bukuId
+            })
+            .then(response => {
+                $('#cart-count').text(response.data.cart_count);
+                $.alert('Buku berhasil ditambahkan ke keranjang!');
+            })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    showLoginModal(bukuId);
+                } else {
+                    $.alert(error.response?.data?.message || 'Terjadi kesalahan. Silakan coba lagi.');
+                }
+            });
+        });
+
+        function showLoginModal(bukuId) {
+            $.confirm({
+                title: 'Login Diperlukan',
+                content: '' +
+                    '<form id="login-form">' +
+                    '<div class="form-group">' +
+                    '<label>Email</label>' +
+                    '<input type="email" id="email" placeholder="Masukkan email" class="form-control" required />' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label>Password</label>' +
+                    '<input type="password" id="password" placeholder="Masukkan password" class="form-control" required />' +
+                    '</div>' +
+                    '</form>',
+                buttons: {
+                    login: {
+                        text: 'Login',
+                        btnClass: 'btn-blue',
+                        action: function () {
+                            var email = $('#email').val();
+                            var password = $('#password').val();
+                            var modalInstance = this;
+
+                            if (!email || !password) {
+                                $.alert('Email dan password harus diisi.');
+                                return false;
+                            }
+
+                            axios.post('{{ route('login') }}', {
+                                email: email,
+                                password: password
+                            })
+                            .then(response => {
+                                $.alert('Login berhasil!');
+
+                                updateNavbar(true);
+
+                                updateCartCount();
+
+                                modalInstance.close();
+                                
+                                addToCart(bukuId);
+                            })
+                            .catch(error => {
+                                $.alert('Login gagal. Periksa email dan password.');
+                            });
+
+                            return false;
+                        }
+                    },
+                    cancel: function () {}
+                }
+            });
+        }
+
+        function addToCart(bukuId) {
+            axios.post('{{ route('cart.add') }}', {
+                buku_id: bukuId
+            })
+            .then(response => {
+                $('#cart-count').text(response.data.cart_count);
+                $.alert('Buku berhasil ditambahkan ke cart!');
+            })
+            .catch(error => {
+                $.alert(error.response?.data?.message || 'Terjadi kesalahan!');
+            });
+        }
+
+        // Fungsi untuk memperbarui jumlah cart saat halaman dimuat
+        function updateCartCount() {
+            axios.get('{{ route('cart.count') }}')
+            .then(response => {
+                $('#cart-count').text(response.data.cart_count);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+
+        updateCartCount();
+    });
+
+</script>
+@endpush
+

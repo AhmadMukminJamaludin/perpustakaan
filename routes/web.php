@@ -5,11 +5,24 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function (Request $request) {
-    return Auth::check()
-        ? redirect('/dashboard')
-        : app(\App\Http\Controllers\LandingController::class)->index($request);
-})->name('landing');
+Route::get('/', [\App\Http\Controllers\LandingController::class, 'index'])->name('landing');
+
+Route::post('/cart/add', [\App\Http\Controllers\CartController::class, 'addToCart'])
+    ->middleware('auth.booking')
+    ->name('cart.add');
+Route::get('/cart/count', [\App\Http\Controllers\CartController::class, 'cartCount'])->name('cart.count');
+
+Route::get('/check-auth', function () {
+    return response()->json(['authenticated' => Auth::check()]);
+})->name('check.auth');
+
+Route::post('/login-ajax', function (Illuminate\Http\Request $request) {
+    $credentials = $request->only('email', 'password');
+    if (Auth::attempt($credentials)) {
+        return response()->json(['success' => true]);
+    }
+    return response()->json(['success' => false]);
+})->name('login.ajax');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

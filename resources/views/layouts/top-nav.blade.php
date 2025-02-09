@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title', 'Landing Page')</title>
   <!-- Bootstrap & AdminLTE -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
@@ -11,11 +12,15 @@
   <!-- jQuery (Wajib untuk AdminLTE) -->
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+  <!-- jQuery ConfirmJS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.js"></script>
+  @vite(['resources/js/app.js'])
   @stack('styles')
 </head>
 <body class="hold-transition layout-top-nav">
 <div class="wrapper">
-  <!-- Navbar -->
   <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
     <div class="container">
       <a href="{{ url('/') }}" class="navbar-brand">
@@ -25,22 +30,24 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">
-        <!-- Left navbar links -->
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a href="{{ url('/') }}" class="nav-link">Beranda</a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">Booking</a>
-          </li>
-          <!-- Tambahkan link lain jika diperlukan -->
-        </ul>
-      </div>
+          <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+              <li class="nav-item">
+                  <a class="nav-link" href="#">
+                      <i class="fa-solid fa-cart-shopping"></i>
+                      <span class="badge badge-danger navbar-badge" id="cart-count"></span>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ route('login') }}" id="auth-link">
+                      <i class="fa-solid fa-right-to-bracket mr-2"></i>
+                      Sign In
+                  </a>
+              </li>
+          </ul>
+      </div>       
     </div>
   </nav>
-  <!-- /.navbar -->
-
-  <!-- Content Wrapper. Contains page content -->
+  
   <div class="content-wrapper">
     <div class="content-header">
         <div class="container">
@@ -65,13 +72,34 @@
   </footer>
 </div>
 <!-- ./wrapper -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      // Cek status login tanpa refresh
+      axios.get('{{ route('check.auth') }}')
+          .then(response => {
+              if (response.data.authenticated) {
+                  updateNavbar(true, response.data.dashboard_url);
+              }
+          })
+          .catch(error => {
+              console.error("Error checking authentication:", error);
+          });
+  });
 
-<!-- jQuery -->
-<script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
-<!-- Bootstrap 4 -->
-<script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<!-- AdminLTE App -->
-<script src="{{ asset('adminlte/js/adminlte.min.js') }}"></script>
+  function updateNavbar(isAuthenticated, dashboardUrl = '/dashboard') {
+      let authLink = document.getElementById('auth-link');
+      if (authLink) {
+          if (isAuthenticated) {
+              authLink.innerHTML = `<i class="fa-solid fa-user mr-2"></i> Dashboard`;
+              authLink.href = dashboardUrl;
+          } else {
+              authLink.innerHTML = `<i class="fa-solid fa-right-to-bracket mr-2"></i> Sign In`;
+              authLink.href = '{{ route('login') }}';
+          }
+      }
+  }
+</script>
+
 @stack('scripts')
 </body>
 </html>
