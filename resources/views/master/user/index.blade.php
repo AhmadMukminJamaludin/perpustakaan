@@ -32,26 +32,26 @@
                         <form action="{{ route('users.updateRole', $user->id) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <select name="role" class="form-control" onchange="this.form.submit()">
+                            <select name="role" class="form-control p-1" style="font-size: 12px;" onchange="this.form.submit()">
                                 <option value="pengunjung" {{ $user->hasRole('pengunjung') ? 'selected' : '' }}>Pengunjung</option>
                                 <option value="admin" {{ $user->hasRole('admin') ? 'selected' : '' }}>Admin</option>
                             </select>
                         </form>
                     </td>                    
                     <td>
-                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-info btn-sm">
+                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-info btn-sm" style="font-size: 10px">
                             <i class="fas fa-edit"></i> Edit
                         </a>
                         @if(auth()->user()->id !== $user->id)
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus pengguna ini?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">
+                                <button type="submit" class="btn btn-danger btn-sm" style="font-size: 10px">
                                     <i class="fas fa-trash"></i> Hapus
                                 </button>
                             </form>
                         @else
-                            <button class="btn btn-secondary btn-sm" disabled>
+                            <button class="btn btn-secondary btn-sm" style="font-size: 10px" disabled>
                                 <i class="fas fa-ban"></i> Tidak Bisa Hapus
                             </button>
                         @endif

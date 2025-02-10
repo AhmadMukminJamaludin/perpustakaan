@@ -10,13 +10,13 @@
                 <div class="card-header">
                     <h3 class="card-title">Daftar Buku</h3>
                     <div class="card-tools">
-                        <a href="{{ route('buku.create') }}" class="btn btn-primary">
+                        <a href="{{ route('buku.create') }}" class="btn btn-primary btn-sm" style="font-size: 10px">
                             <i class="fas fa-plus"></i> Tambah Buku
                         </a>
                     </div>
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered table-striped" id="table-buku">
+                    <table class="table table-bordered table-striped" id="table-buku" style="font-size: 10px">
                         <thead>
                             <tr>
                                 <th>No.</th>
@@ -55,13 +55,13 @@
                                 <td class="text-right">{{ $item->sisa_stok }}</td>
                                 <td class="text-right">{{ $item->jumlah_dipinjam }}</td>
                                 <td>
-                                    <a href="{{ route('buku.edit', $item->id) }}" class="btn btn-warning btn-sm">
+                                    <a href="{{ route('buku.edit', $item->id) }}" class="btn btn-warning btn-sm" style="font-size: 10px">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
                                     <form action="{{ route('buku.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
+                                        <button type="submit" class="btn btn-danger btn-sm" style="font-size: 10px">
                                             <i class="fas fa-trash"></i> Hapus
                                         </button>
                                     </form>

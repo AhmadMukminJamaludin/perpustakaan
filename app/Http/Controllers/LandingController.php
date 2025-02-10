@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Peminjaman;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LandingController extends Controller
 {
@@ -20,9 +22,13 @@ class LandingController extends Controller
 
         $bukuList = $query->paginate(9)->appends($request->all());
 
-        $bukuDipinjam = \App\Models\Peminjaman::where('status', '<>', 'Dikembalikan')
-            ->pluck('buku_id')
-            ->toArray();
+        $bukuDipinjam = [];
+        if (Auth::check()) {
+            $bukuDipinjam = Peminjaman::where('user_id', Auth::id())
+                ->where('status', '<>', 'Dikembalikan')
+                ->pluck('buku_id')
+                ->toArray();
+        }
 
         return view('landing', compact('bukuList', 'bukuDipinjam'));
     }
