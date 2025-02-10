@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('url')->nullable();
             $table->string('icon')->nullable();
+            $table->string('slug')->nullable();
 
             $table->foreign('parent_id')->references('id')->on('menu')->onDelete('cascade');
         });
