@@ -10,7 +10,7 @@ class PeminjamanController extends Controller
 {
     public function index()
     {
-        $peminjamanList = Peminjaman::with(['user', 'buku.penulis'])->get();
+        $peminjamanList = Peminjaman::with(['user', 'buku.penulis'])->latest()->get();
         return view('transaksi.peminjaman.index', compact('peminjamanList'));
     }
 
