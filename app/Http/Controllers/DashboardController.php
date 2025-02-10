@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function admin()
     {
         $jumlahBuku = Buku::all()->count();
         $jumlahAnggota = User::role('pengunjung')->get()->count();
@@ -49,7 +49,7 @@ class DashboardController extends Controller
             $data[] = $item->total_peminjaman;
             $colors[] = '#' . substr(md5(rand()), 0, 6); // Warna random
         }
-        return view('dashboard', [
+        return view('dashboard.admin', [
             'jumlahBuku' => $jumlahBuku,
             'jumlahAnggota' => $jumlahAnggota,
             'totalDipinjam' => $totalDipinjam,
@@ -59,5 +59,10 @@ class DashboardController extends Controller
             'data' => $data, 
             'colors' => $colors
         ]);
+    }
+
+    public function pengunjung()
+    {
+        return view('dashboard.pengunjung');
     }
 }

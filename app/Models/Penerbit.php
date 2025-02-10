@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Penerbit extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
 
     protected $table = 'penerbit';
     protected $fillable = ['nama', 'email', 'telepon', 'alamat'];

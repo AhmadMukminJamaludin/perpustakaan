@@ -20,7 +20,14 @@
     <div class="row">
         @foreach($bukuList as $buku)
         <div class="col-md-4 mb-4">
-            <div class="card h-100">
+            <div class="card h-100 position-relative">
+                @if ($buku->peminjaman_count == $maxPeminjaman && $buku->peminjaman_count > 0)
+                    <div class="ribbon-wrapper ribbon-lg">
+                        <div class="ribbon bg-danger text-md">
+                            Terpopuler
+                        </div>
+                    </div>
+                @endif
                 <img 
                     class="card-img-top" 
                     src="{{ $buku->path ? asset('storage/' . $buku->path) : 'https://placehold.jp/200x300.png' }}" 
@@ -31,10 +38,10 @@
                     <h5 class="card-title mb-3">{{ $buku->judul }}</h5>
                     <p class="card-text"><strong>ISBN:</strong> {{ $buku->isbn }}</p>
                     <p class="card-text">
-                    <strong>Penulis:</strong> {{ $buku->penulis->nama ?? 'Tidak diketahui' }}
+                        <strong>Penulis:</strong> {{ $buku->penulis->nama ?? 'Tidak diketahui' }}
                     </p>
                     <p class="card-text">
-                    <strong>Penerbit:</strong> {{ $buku->penerbit->nama ?? 'Tidak diketahui' }}
+                        <strong>Penerbit:</strong> {{ $buku->penerbit->nama ?? 'Tidak diketahui' }}
                     </p>
                 </div>
                 <div class="card-footer">

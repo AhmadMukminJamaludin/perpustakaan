@@ -26,7 +26,13 @@ Route::post('/login-ajax', function (Illuminate\Http\Request $request) {
     return response()->json(['success' => false]);
 })->name('login.ajax');
 
-Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    if (Auth::user()->hasRole('admin')) {
+        return app(\App\Http\Controllers\DashboardController::class)->admin();
+    } else {
+        return app(\App\Http\Controllers\DashboardController::class)->pengunjung();
+    }
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

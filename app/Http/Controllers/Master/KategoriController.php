@@ -32,7 +32,7 @@ class KategoriController extends Controller
     {
         try {
             $validated = $request->validate([
-                'nama'      => 'required|string|max:255|unique:kategori,nama',
+                'nama'      => 'required|string|max:255',
                 'deskripsi' => 'nullable|string'
             ]);
             // Simpan kategori baru menggunakan mass assignment

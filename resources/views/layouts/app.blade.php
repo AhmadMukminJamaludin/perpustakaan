@@ -42,11 +42,17 @@
             <div class="content-header">
                 <div class="container-fluid">
                     @if(session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
+                    <blockquote class="quote-success">
+                        <h5 id="note">Berhasil!</h5>
+                        <p>{{ session('success') }}</p>
+                    </blockquote>
                     @endif
 
                     @if(session('error'))
-                        <div class="alert alert-danger">{{ session('error') }}</div>
+                    <blockquote class="quote-danger">
+                        <h5 id="note">Terjadi Kesalahan!</h5>
+                        <p>{{ session('error') }}</p>
+                    </blockquote>
                     @endif
 
                     @yield('content')

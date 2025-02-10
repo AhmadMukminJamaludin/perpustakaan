@@ -9,8 +9,8 @@
         <span class="info-box-icon bg-info"><i class="fas fa-book"></i></span>
 
         <div class="info-box-content">
-        <span class="info-box-text">Jumlah Buku</span>
-        <span class="info-box-number">{{ $jumlahBuku }}</span>
+            <span class="info-box-text">Jumlah Buku</span>
+            <span class="info-box-number">{{ $jumlahBuku }}</span>
         </div>
         <!-- /.info-box-content -->
     </div>
@@ -22,8 +22,8 @@
         <span class="info-box-icon bg-success"><i class="fas fa-users"></i></span>
 
         <div class="info-box-content">
-        <span class="info-box-text">Jumlah Anggota</span>
-        <span class="info-box-number">{{ $jumlahAnggota }}</span>
+            <span class="info-box-text">Jumlah Anggota</span>
+            <span class="info-box-number">{{ $jumlahAnggota }}</span>
         </div>
         <!-- /.info-box-content -->
     </div>
@@ -35,8 +35,8 @@
         <span class="info-box-icon bg-warning"><i class="fas fa-sync"></i></span>
 
         <div class="info-box-content">
-        <span class="info-box-text">Total Peminjaman</span>
-        <span class="info-box-number">{{ $totalDipinjam }}</span>
+            <span class="info-box-text">Total Peminjaman</span>
+            <span class="info-box-number">{{ $totalDipinjam }}</span>
         </div>
         <!-- /.info-box-content -->
     </div>
@@ -48,8 +48,8 @@
         <span class="info-box-icon bg-danger"><i class="fas fa-clock"></i></span>
 
         <div class="info-box-content">
-        <span class="info-box-text">Total Keterlambatan</span>
-        <span class="info-box-number">{{ $totalOverdue }}</span>
+            <span class="info-box-text">Total Keterlambatan</span>
+            <span class="info-box-number">{{ $totalOverdue }}</span>
         </div>
         <!-- /.info-box-content -->
     </div>

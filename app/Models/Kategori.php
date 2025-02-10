@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Kategori extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
 
     protected $table = 'kategori'; // Nama tabel di database
     protected $fillable = ['nama', 'deskripsi'];

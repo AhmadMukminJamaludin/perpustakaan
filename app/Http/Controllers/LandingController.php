@@ -10,7 +10,9 @@ class LandingController extends Controller
 {
     public function index(Request $request) 
     {
-        $query = \App\Models\Buku::with(['penulis', 'penerbit']);
+        $query = \App\Models\Buku::with(['penulis', 'penerbit'])
+            ->withCount('peminjaman')
+            ->orderByDesc('peminjaman_count');
         
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
@@ -30,6 +32,8 @@ class LandingController extends Controller
                 ->toArray();
         }
 
-        return view('landing', compact('bukuList', 'bukuDipinjam'));
+        $maxPeminjaman = $bukuList->max('peminjaman_count');
+
+        return view('landing', compact('bukuList', 'bukuDipinjam', 'maxPeminjaman'));
     }
 }
