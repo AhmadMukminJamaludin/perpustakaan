@@ -25,7 +25,9 @@
                                 <th>Kategori</th>
                                 <th>Penulis</th>
                                 <th>Tahun</th>
-                                <th>Stok</th>
+                                <th>Total Stok</th>
+                                <th>Sisa Stok</th>
+                                <th>Total Dipinjam</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -48,8 +50,10 @@
                                 </td>
                                 <td>{{ $item->kategori->nama }}</td>
                                 <td>{{ $item->penulis->nama }}</td>
-                                <td>{{ $item->tahun_terbit }}</td>
-                                <td>{{ $item->stok }}</td>
+                                <td class="text-right">{{ $item->tahun_terbit }}</td>
+                                <td class="text-right">{{ $item->stok }}</td>
+                                <td class="text-right">{{ $item->sisa_stok }}</td>
+                                <td class="text-right">{{ $item->jumlah_dipinjam }}</td>
                                 <td>
                                     <a href="{{ route('buku.edit', $item->id) }}" class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i> Edit

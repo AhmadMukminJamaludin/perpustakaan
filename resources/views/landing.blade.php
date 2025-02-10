@@ -38,12 +38,25 @@
                     </p>
                 </div>
                 <div class="card-footer">
-                    @if (in_array($buku->id, $bukuDipinjam))
+                    @if ($buku->sisa_stok == 0)
+                        <button class="btn btn-danger btn-block" disabled>
+                            <i class="fas fa-ban mr-2"></i> Stok Kosong
+                        </button>
+                    @elseif (in_array($buku->id, $bukuDipinjam))
                         <button class="btn btn-secondary btn-block" disabled>Buku Sudah Dipinjam</button>
                     @else
                         <button class="btn btn-outline-primary btn-block btn-booking" data-id="{{ $buku->id }}">
-                            <i class="fas fa-shopping-cart mr-2"></i>
-                            Booking
+                            <i class="fas fa-shopping-cart mr-2"></i> Booking
+                        </button>
+                        <button class="btn btn-outline-info btn-block btn-detail" 
+                            data-judul="{{ $buku->judul }}" 
+                            data-isbn="{{ $buku->isbn }}" 
+                            data-penulis="{{ $buku->penulis->nama ?? 'Tidak diketahui' }}" 
+                            data-penerbit="{{ $buku->penerbit->nama ?? 'Tidak diketahui' }}"
+                            data-tahun="{{ $buku->tahun_terbit }}"
+                            data-stok="{{ $buku->sisa_stok }}"
+                            data-gambar="{{ $buku->path ? asset('storage/' . $buku->path) : 'https://placehold.jp/200x300.png' }}">
+                            <i class="fas fa-eye mr-2"></i> Detail
                         </button>
                     @endif
                 </div>
@@ -211,8 +224,41 @@
         }
 
         updateCartCount();
-    });
 
+        $('.btn-detail').on('click', function() {
+            var judul = $(this).data('judul');
+            var isbn = $(this).data('isbn');
+            var penulis = $(this).data('penulis');
+            var penerbit = $(this).data('penerbit');
+            var tahun = $(this).data('tahun');
+            var stok = $(this).data('stok');
+            var gambar = $(this).data('gambar');
+
+            $.confirm({
+                title: 'Detail Buku',
+                content: `
+                    <div class="text-center">
+                        <img src="${gambar}" alt="${judul}" style="width: 100px; height: 150px; object-fit: cover; border-radius: 5px;">
+                        <h4 class="mt-3">${judul}</h4>
+                        <hr>
+                        <p><strong>ISBN:</strong> ${isbn}</p>
+                        <p><strong>Penulis:</strong> ${penulis}</p>
+                        <p><strong>Penerbit:</strong> ${penerbit}</p>
+                        <p><strong>Tahun Terbit:</strong> ${tahun}</p>
+                        <p><strong>Sisa Stok:</strong> ${stok}</p>
+                    </div>
+                `,
+                columnClass: 'medium',
+                buttons: {
+                    close: {
+                        text: 'Tutup',
+                        btnClass: 'btn-red',
+                        action: function () {}
+                    }
+                }
+            });
+        });
+    });
 </script>
 @endpush
 

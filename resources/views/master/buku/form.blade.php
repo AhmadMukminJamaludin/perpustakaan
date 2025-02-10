@@ -118,6 +118,14 @@
                 <span class="invalid-feedback">{{ $message }}</span>
               @enderror
             </div>
+
+            <div class="form-group">
+              <label for="stok">Stok</label>
+              <input type="number" name="stok" id="stok" class="form-control @error('stok') is-invalid @enderror" value="{{ old('stok', $buku->stok ?? '') }}" required>
+              @error('stok')
+                <span class="invalid-feedback">{{ $message }}</span>
+              @enderror
+            </div>
           </div>
           <!-- /.card-body -->
 

@@ -44,6 +44,7 @@ class BukuController extends Controller
                 'penerbit_id'  => 'required|exists:penerbit,id',
                 'tahun_terbit' => 'required|integer|min:1900|max:' . date('Y'),
                 'sampul'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'stok'       => 'required',
             ]);
 
             $filePath = null;
@@ -91,7 +92,8 @@ class BukuController extends Controller
                 'penulis_id'   => 'required|exists:penulis,id',
                 'penerbit_id'  => 'required|exists:penerbit,id',
                 'tahun_terbit' => 'required|integer|min:1900|max:' . date('Y'),
-                'sampul'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+                'sampul'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'stok'       => 'required',
             ]);
 
             if ($request->hasFile('sampul')) {

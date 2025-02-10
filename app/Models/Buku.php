@@ -11,7 +11,12 @@ class Buku extends Model
     use HasUuids, SoftDeletes;
 
     protected $table = 'buku';
-    protected $fillable = ['isbn', 'judul', 'kategori_id', 'penulis_id', 'penerbit_id', 'tahun_terbit', 'stok', 'path'];
+    protected $fillable = [
+        'isbn', 'judul', 'kategori_id', 'penulis_id', 
+        'penerbit_id', 'tahun_terbit', 'stok', 'path'
+    ];
+
+    protected $appends = ['sisa_stok', 'jumlah_dipinjam'];
 
     public function kategori()
     {
@@ -31,5 +36,21 @@ class Buku extends Model
     public function peminjaman()
     {
         return $this->hasMany(Peminjaman::class);
+    }
+
+    public function getSisaStokAttribute()
+    {
+        $bukuDipinjam = $this->peminjaman()
+            ->whereNull('tanggal_dikembalikan') // Buku yang belum dikembalikan
+            ->count();
+
+        return max(0, $this->stok - $bukuDipinjam); // Sisa stok tidak boleh negatif
+    }
+
+    public function getJumlahDipinjamAttribute()
+    {
+        return $this->peminjaman()
+            ->whereNull('tanggal_dikembalikan') // Hanya yang belum dikembalikan
+            ->count();
     }
 }
