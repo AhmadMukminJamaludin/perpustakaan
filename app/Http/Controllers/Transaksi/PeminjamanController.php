@@ -36,7 +36,7 @@ class PeminjamanController extends Controller
         $request->validate([
             'tanggal_pinjam' => 'required|date',
             'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
-            'status' => 'required|in:Menunggu Verifikasi,Dipinjam,Dikembalikan',
+            'status' => 'required|in:menunggu verifikasi,dipinjam,dikembalikan',
             'denda' => 'nullable|numeric|min:0',
         ]);
 

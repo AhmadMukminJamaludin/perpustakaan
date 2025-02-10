@@ -196,9 +196,9 @@
                         <div class="form-group">
                             <label>Status</label>
                             <select id="edit-status" class="form-control">
-                                <option value="Menunggu Verifikasi" ${status === 'Menunggu Verifikasi' ? 'selected' : ''}>Menunggu Verifikasi</option>
-                                <option value="Dipinjam" ${status === 'Dipinjam' ? 'selected' : ''}>Dipinjam</option>
-                                <option value="Dikembalikan" ${status === 'Dikembalikan' ? 'selected' : ''}>Dikembalikan</option>
+                                <option value="menunggu verifikasi" ${status === 'menunggu verifikasi' ? 'selected' : ''}>menunggu verifikasi</option>
+                                <option value="dipinjam" ${status === 'dipinjam' ? 'selected' : ''}>dipinjam</option>
+                                <option value="dikembalikan" ${status === 'dikembalikan' ? 'selected' : ''}>dikembalikan</option>
                             </select>
                         </div>
     

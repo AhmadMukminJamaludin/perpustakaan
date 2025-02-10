@@ -28,7 +28,7 @@
     @vite(['resources/js/app.js'])
     @stack('styles')
 </head>
-<body class="hold-transition sidebar-mini layout-fixed {{ request()->is('transaksi/peminjaman*') ? 'sidebar-collapse' : '' }}">
+<body class="hold-transition sidebar-mini layout-fixed {{ request()->is('transaksi/peminjaman*') ? 'sidebar-collapse' : '' }}" style="font-size: 12px;">
     <div class="wrapper">
         <!-- Navbar -->
         @include('layouts.navbar')
