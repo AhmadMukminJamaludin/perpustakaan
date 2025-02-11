@@ -17,7 +17,7 @@
                         @endphp
                         <li class="nav-item {{ $isMenuOpen }}">
                             <a href="{{ $menu->url }}" class="nav-link {{ $isActive }}">
-                                <i class="nav-icon {{ $menu->icon }}"></i>
+                                <i class="nav-icon {{ $menu->icon }}" style="font-size: 14px"></i>
                                 <p>
                                     {{ $menu->name }}
                                     @if (isset($menu->children))
@@ -34,7 +34,7 @@
                                             @endphp
                                             <li class="nav-item">
                                                 <a href="{{ $child->url }}" class="nav-link {{ $isChildActive }}">
-                                                    <i class="{{ $child->icon }} nav-icon"></i>
+                                                    <i class="{{ $child->icon }} nav-icon" style="font-size: 14px"></i>
                                                     <p>{{ $child->name }}</p>
                                                 </a>
                                             </li>
