@@ -19,6 +19,7 @@
                                 <th>Sampul</th>
                                 <th>Judul Buku</th>
                                 <th>Tanggal Booking</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -40,6 +41,15 @@
                                         <small><b>ISBN:</b> {{ $item->buku->isbn }}</small>
                                     </td>
                                     <td>{{ $item->created_at->format('d-m-Y') }}</td>
+                                    <td>
+                                        <form action="{{ route('booking.remove', ['user_id' => $item->user_id,'buku_id' => $item->buku_id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus booking ini?')">
+                                            @csrf
+                                            @method('POST')
+                                            <button type="submit" class="btn btn-danger btn-xs">
+                                                <i class="fas fa-trash mr-1"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

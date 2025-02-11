@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('transaksi')->group(function () {
         Route::get('/booking', [\App\Http\Controllers\Transaksi\BookingController::class, 'index'])->name('booking.index');
+        Route::post('/booking/remove', [\App\Http\Controllers\Transaksi\BookingController::class, 'remove'])->name('booking.remove');
         Route::get('/peminjaman', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'index'])->name('peminjaman.index');
         Route::post('/peminjaman/verifikasi', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'verifikasiPeminjaman'])->name('peminjaman.verifikasi');
         Route::post('/peminjaman/{id}/update', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'update'])->name('peminjaman.update');

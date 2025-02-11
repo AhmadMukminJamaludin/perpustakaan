@@ -10,7 +10,13 @@ class PeminjamanController extends Controller
 {
     public function index()
     {
-        $peminjamanList = Peminjaman::with(['user', 'buku.penulis'])->latest()->get();
+        $query = Peminjaman::with(['user', 'buku.penulis']);
+
+        if (auth()->user()->hasRole('pengunjung')) {
+            $query->where('user_id', auth()->id());
+        }
+
+        $peminjamanList = $query->latest()->get();
         return view('transaksi.peminjaman.index', compact('peminjamanList'));
     }
 

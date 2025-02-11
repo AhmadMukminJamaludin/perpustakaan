@@ -26,7 +26,9 @@
                                 <th>Keterlambatan (Hari)</th>
                                 <th>Denda</th>
                                 <th>Total Denda</th>
-                                <th>Aksi</th>
+                                @if (Auth::user()->hasRole('admin'))
+                                    <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -54,30 +56,32 @@
                                     <td class="text-right">{{ $peminjaman->lama_keterlambatan }}</td>
                                     <td class="text-right">{{ $peminjaman->denda ? 'Rp ' . number_format($peminjaman->denda, 0, ',', '.') : '-' }}</td>
                                     <td class="text-right">{{ $peminjaman->denda ? 'Rp ' . number_format($peminjaman->total_denda, 0, ',', '.') : '-' }}</td>
-                                    <td class="text-nowrap">
-                                        @if ($peminjaman->status === 'menunggu verifikasi')
-                                            <button class="btn btn-primary btn-sm btn-verifikasi" style="font-size: 10px" data-id="{{ $peminjaman->id }}" data-user="{{ $peminjaman->user->name }}" data-email="{{ $peminjaman->user->email }}">
-                                                <i class="fas fa-check-circle mr-1"></i> Verifikasi
-                                            </button>
-                                        @elseif ($peminjaman->status === 'dipinjam')
-                                            <button class="btn btn-success btn-sm btn-kembalikan" style="font-size: 10px"
+                                    @if (Auth::user()->hasRole('admin'))
+                                        <td class="text-nowrap">
+                                            @if ($peminjaman->status === 'menunggu verifikasi')
+                                                <button class="btn btn-primary btn-sm btn-verifikasi" style="font-size: 10px" data-id="{{ $peminjaman->id }}" data-user="{{ $peminjaman->user->name }}" data-email="{{ $peminjaman->user->email }}">
+                                                    <i class="fas fa-check-circle mr-1"></i> Verifikasi
+                                                </button>
+                                            @elseif ($peminjaman->status === 'dipinjam')
+                                                <button class="btn btn-success btn-sm btn-kembalikan" style="font-size: 10px"
+                                                    data-id="{{ $peminjaman->id }}"
+                                                    data-judul="{{ $peminjaman->buku->judul }}">
+                                                    <i class="fa fa-check"></i> Dikembalikan
+                                                </button>                                    
+                                            @endif
+                                            <button class="btn btn-warning btn-sm edit-peminjaman" style="font-size: 10px"
                                                 data-id="{{ $peminjaman->id }}"
-                                                data-judul="{{ $peminjaman->buku->judul }}">
-                                                <i class="fa fa-check"></i> Dikembalikan
-                                            </button>                                    
-                                        @endif
-                                        <button class="btn btn-warning btn-sm edit-peminjaman" style="font-size: 10px"
-                                            data-id="{{ $peminjaman->id }}"
-                                            data-user="{{ $peminjaman->user->name }}"
-                                            data-buku="{{ $peminjaman->buku->judul }}"
-                                            data-tanggal-pinjam="{{ $peminjaman->tanggal_pinjam->format('Y-m-d') }}"
-                                            data-tanggal-kembali="{{ $peminjaman->tanggal_kembali?->format('Y-m-d') }}"
-                                            data-status="{{ $peminjaman->status }}"
-                                            data-denda="{{ $peminjaman->denda }}"
-                                        >
-                                            <i class="fa fa-edit"></i> Ubah
-                                        </button>
-                                    </td>
+                                                data-user="{{ $peminjaman->user->name }}"
+                                                data-buku="{{ $peminjaman->buku->judul }}"
+                                                data-tanggal-pinjam="{{ $peminjaman->tanggal_pinjam->format('Y-m-d') }}"
+                                                data-tanggal-kembali="{{ $peminjaman->tanggal_kembali?->format('Y-m-d') }}"
+                                                data-status="{{ $peminjaman->status }}"
+                                                data-denda="{{ $peminjaman->denda }}"
+                                            >
+                                                <i class="fa fa-edit"></i> Ubah
+                                            </button>
+                                        </td>
+                                    @endif
                                 </tr>
                             @empty
                                 <tr>
