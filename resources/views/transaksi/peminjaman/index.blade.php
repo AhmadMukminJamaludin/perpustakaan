@@ -10,8 +10,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Daftar Peminjaman</h3>
                 </div>
-                <div class="card-body table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" style="font-size: 10px;" id="table-peminjaman">
+                <div class="card-body table-responsive" style="font-size: 10px;">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" id="table-peminjaman">
                         <thead class="text-center align-middle">
                             <tr>
                                 <th>No</th>
@@ -24,7 +24,7 @@
                                 <th>Status</th>
                                 <th>Lama Pinjaman (Hari)</th>
                                 <th>Keterlambatan (Hari)</th>
-                                <th>Denda</th>
+                                <th>Denda (Keterlambatan + Kehilangan)</th>
                                 <th>Total Denda</th>
                                 @if (Auth::user()->hasRole('admin'))
                                     <th>Aksi</th>
@@ -51,25 +51,49 @@
                                                 {{ $peminjaman->status === 'menunggu verifikasi' ? 'Menunggu Verifikasi' : 'Dipinjam' }}
                                             </span>
                                         @endif
+
+                                        @if ($peminjaman->status === 'hilang')
+                                            <span class="badge badge-danger">Buku Hilang</span>
+                                        @endif
                                     </td>                                    
                                     <td class="text-right">{{ $peminjaman->lama_pinjaman }}</td>
                                     <td class="text-right">{{ $peminjaman->lama_keterlambatan }}</td>
-                                    <td class="text-right">{{ $peminjaman->denda ? 'Rp ' . number_format($peminjaman->denda, 0, ',', '.') : '-' }}</td>
-                                    <td class="text-right">{{ $peminjaman->denda ? 'Rp ' . number_format($peminjaman->total_denda, 0, ',', '.') : '-' }}</td>
+                                    <td class="text-right">
+                                        @php
+                                            $denda = (int) $peminjaman->denda; // Konversi ke integer
+                                            $lamaKeterlambatan = (int) $peminjaman->lama_keterlambatan; // Konversi ke integer
+                                            $dendaKehilangan = (int) $peminjaman->denda_kehilangan; // Konversi ke integer
+                                            
+                                            $totalDenda = $denda * $lamaKeterlambatan;
+                                        @endphp
+                                    
+                                        @if ($totalDenda > 0 || $dendaKehilangan > 0)
+                                            {{ number_format($totalDenda, 0, ',', '.') }}
+                                            @if ($dendaKehilangan > 0)
+                                                + {{ number_format($dendaKehilangan, 0, ',', '.') }}
+                                            @endif
+                                        @else
+                                            -
+                                        @endif
+                                    </td>                                    
+                                    <td class="text-right">{{ $peminjaman->denda ? number_format($peminjaman->total_denda, 0, ',', '.') : '-' }}</td>
                                     @if (Auth::user()->hasRole('admin'))
                                         <td class="text-nowrap">
                                             @if ($peminjaman->status === 'menunggu verifikasi')
-                                                <button class="btn btn-primary btn-sm btn-verifikasi" style="font-size: 10px" data-id="{{ $peminjaman->id }}" data-user="{{ $peminjaman->user->name }}" data-email="{{ $peminjaman->user->email }}">
+                                                <button class="btn btn-primary btn-xs btn-verifikasi" style="font-size: 10px" data-id="{{ $peminjaman->id }}" data-user="{{ $peminjaman->user->name }}" data-email="{{ $peminjaman->user->email }}">
                                                     <i class="fas fa-check-circle mr-1"></i> Verifikasi
                                                 </button>
                                             @elseif ($peminjaman->status === 'dipinjam')
-                                                <button class="btn btn-success btn-sm btn-kembalikan" style="font-size: 10px"
+                                                <button class="btn btn-success btn-xs btn-kembalikan" style="font-size: 10px"
                                                     data-id="{{ $peminjaman->id }}"
                                                     data-judul="{{ $peminjaman->buku->judul }}">
                                                     <i class="fa fa-check"></i> Dikembalikan
-                                                </button>                                    
+                                                </button>      
+                                                <button class="btn btn-danger btn-xs btn-laporkan-hilang" data-id="{{ $peminjaman->buku_id }}" data-judul="{{ $peminjaman->buku->judul }}" style="font-size: 10px">
+                                                    <i class="fas fa-exclamation-triangle"></i> Laporkan Hilang
+                                                </button>                              
                                             @endif
-                                            <button class="btn btn-warning btn-sm edit-peminjaman" style="font-size: 10px"
+                                            <button class="btn btn-warning btn-xs edit-peminjaman" style="font-size: 10px"
                                                 data-id="{{ $peminjaman->id }}"
                                                 data-user="{{ $peminjaman->user->name }}"
                                                 data-buku="{{ $peminjaman->buku->judul }}"
@@ -306,7 +330,76 @@
                 }
             });
         });
-    });
+        $(".btn-laporkan-hilang").on("click", function () {
+            let bukuId = $(this).data("id");
+            let judulBuku = $(this).data("judul");
 
+            $.confirm({
+                title: "Laporkan Buku Hilang",
+                content: `
+                    <form id="formLaporkan">
+                        <div class="form-group">
+                            <label>Judul Buku</label>
+                            <input type="text" class="form-control form-control-sm" value="${judulBuku}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Denda Kehilangan</label>
+                            <input type="number" class="form-control form-control-sm text-right" name="denda_kehilangan">
+                        </div>
+                        <div class="form-group">
+                            <label>Alasan Kehilangan</label>
+                            <textarea class="form-control form-control-sm" name="alasan" rows="3" required></textarea>
+                        </div>
+                    </form>
+                `,
+                type: "red",
+                icon: "fas fa-exclamation-triangle",
+                buttons: {
+                    laporkan: {
+                        text: "Laporkan",
+                        btnClass: "btn-red",
+                        action: function () {
+                            let denda_kehilangan = this.$content.find("input[name='denda_kehilangan']").val();
+                            let alasan = this.$content.find("textarea[name='alasan']").val();
+
+                            if (!denda_kehilangan) {
+                                $.alert("Denda harus diisi!");
+                                return false;
+                            }
+                            if (!alasan) {
+                                $.alert("Alasan harus diisi!");
+                                return false;
+                            }
+
+                            axios.post('{{ route("peminjaman.hilang") }}', {
+                                buku_id: bukuId,
+                                denda_kehilangan: denda_kehilangan,
+                                alasan: alasan
+                            })
+                            .then(response => {
+                                $.alert({
+                                    title: "Sukses",
+                                    content: response.data.message,
+                                    type: "green"
+                                });
+                            })
+                            .catch(error => {
+                                let message = error.response ? error.response.data.message : "Terjadi kesalahan, coba lagi.";
+                                $.alert({
+                                    title: "Error",
+                                    content: message,
+                                    type: "red"
+                                });
+                            });
+                        }
+                    },
+                    batal: {
+                        text: "Batal",
+                        action: function () { /* Tidak melakukan apa-apa */ }
+                    }
+                }
+            });
+        });
+    });
 </script>
 @endpush

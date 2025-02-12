@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/peminjaman/verifikasi', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'verifikasiPeminjaman'])->name('peminjaman.verifikasi');
         Route::post('/peminjaman/{id}/update', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'update'])->name('peminjaman.update');
         Route::post('/peminjaman/kembalikan', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'kembalikan'])->name('peminjaman.kembalikan');
+        Route::post('/peminjaman/laporkan-hilang', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'updateStatusHilang'])->name('peminjaman.hilang');
     });
 });
 

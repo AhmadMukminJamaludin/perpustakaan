@@ -15,7 +15,9 @@ class Peminjaman extends Model
         'tanggal_kembali',
         'tanggal_dikembalikan',
         'status',
+        'keterangan_kehilangan',
         'denda',
+        'denda_kehilangan',
     ];
 
     protected $casts = [
@@ -34,11 +36,20 @@ class Peminjaman extends Model
      */
     public function getTotalDendaAttribute()
     {
-        $hariTerlambat = $this->lama_keterlambatan; 
+        $hariTerlambat = $this->lama_keterlambatan;
+        $totalDenda = 0;
 
-        // Jika keterlambatan berupa angka, hitung denda
-        return is_numeric($hariTerlambat) ? $hariTerlambat * $this->denda : 0;
+        if (is_numeric($hariTerlambat)) {
+            $totalDenda = $hariTerlambat * $this->denda;
+        }
+
+        if ($this->status === 'hilang') {
+            $totalDenda += $this->denda_kehilangan;
+        }
+
+        return $totalDenda;
     }
+
 
 
     // Attribute Lama Pinjaman (Jumlah Hari dari Pinjam ke Kembali)
