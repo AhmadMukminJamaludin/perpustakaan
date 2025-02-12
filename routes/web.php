@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/role-permission', [RolePermissionController::class, 'index'])->name('role-permission.index');
     Route::post('/role-permission/update', [RolePermissionController::class, 'update'])->name('role-permission.update');
     Route::post('/peminjaman/store', [\App\Http\Controllers\PeminjamanController::class, 'store'])->name('peminjaman.store');
+    Route::get('/peminjaman/overdue', [\App\Http\Controllers\PeminjamanController::class, 'getOverduePeminjaman'])->name('peminjaman.overdue');
 
     Route::prefix('master')->group(function () {
         Route::resource('users', \App\Http\Controllers\UserController::class);

@@ -17,7 +17,6 @@ class DashboardController extends Controller
         $totalDipinjam = Peminjaman::where(function($query) {
             $query->where('status', '!=', 'dikembalikan')->where('status', 'dipinjam');
         })->count();
-        $totalDikembalikan = Peminjaman::where('status', 'dikembalikan')->count();
         $totalOverdue = Peminjaman::where('status', '!=', 'dikembalikan')
             ->where('tanggal_kembali', '<', Carbon::now())
             ->count();
@@ -27,6 +26,11 @@ class DashboardController extends Controller
             ->where('status', 'dipinjam')
             ->groupBy('bulan')
             ->pluck('total', 'bulan');
+
+        $overduePeminjaman = Peminjaman::with(['user', 'buku'])
+            ->where('status', '<>', 'Dikembalikan')
+            ->whereDate('tanggal_kembali', '<', Carbon::today())
+            ->get();
 
         $dataBulan = array_fill(1, 12, 0); // Isi semua bulan dengan 0
             foreach ($peminjamanPerBulan as $bulan => $total) {
@@ -54,6 +58,7 @@ class DashboardController extends Controller
             'jumlahAnggota' => $jumlahAnggota,
             'totalDipinjam' => $totalDipinjam,
             'totalOverdue' => $totalOverdue,
+            'overduePeminjaman' => $overduePeminjaman,
             'peminjamanPerBulan' => array_values($dataBulan),
             'labels' => $labels, 
             'data' => $data, 
@@ -63,6 +68,12 @@ class DashboardController extends Controller
 
     public function pengunjung()
     {
-        return view('dashboard.pengunjung');
+        $daftarPeminjaman = Peminjaman::with('buku:id,judul')
+            ->where('user_id', auth()->id())
+            ->whereNull('tanggal_dikembalikan')
+            ->get();
+        return view('dashboard.pengunjung', [
+            'daftarPeminjaman' => $daftarPeminjaman
+        ]);
     }
 }

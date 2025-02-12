@@ -109,6 +109,46 @@
         <!-- /.card -->
     </div>
 </div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card card-outline card-danger">
+            <div class="card-header">
+                <h3 class="card-title">Overdue Peminjaman</h3>
+    
+                <div class="card-tools">
+                    <div class="input-group input-group-sm" style="width: 200px;">
+                        <input type="text" id="search-overdue" class="form-control float-right" placeholder="Search...">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-default">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body table-responsive p-0" style="height: 300px;">
+                <table class="table table-head-fixed text-nowrap">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Nama Peminjam</th>
+                            <th>Judul Buku</th>
+                            <th class="text-center">Status</th>
+                            <th>Jatuh Tempo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="overdue-list">
+                        <tr>
+                            <td colspan="5" class="text-center">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('styles')
@@ -177,6 +217,45 @@
                     }
                 }
             }
+        });
+    });
+
+    $(document).ready(function () {
+        function loadOverdueData(search = '') {
+            $.ajax({
+                url: "{{ route('peminjaman.overdue') }}",
+                type: "GET",
+                data: { search: search },
+                success: function (data) {
+                    let tbody = $("#overdue-list");
+                    tbody.empty();
+
+                    if (data.length === 0) {
+                        tbody.append('<tr><td colspan="5" class="text-center text-muted">Tidak ada peminjaman yang overdue.</td></tr>');
+                        return;
+                    }
+
+                    $.each(data, function (index, item) {
+                        let row = `<tr>
+                            <td>${index + 1}</td>
+                            <td>${item.user.name}</td>
+                            <td>${item.buku.judul}</td>
+                            <td class="text-center"><span class="badge badge-danger">Overdue</span></td>
+                            <td class="text-danger"><strong>Terlambat sejak ${item.formatted_tanggal_kembali}</strong></td>
+                        </tr>`;
+                        tbody.append(row);
+                    });
+                }
+            });
+        }
+
+        // Load overdue data on page load
+        loadOverdueData();
+
+        // Lazy search feature
+        $("#search-overdue").on("keyup", function () {
+            let search = $(this).val();
+            loadOverdueData(search);
         });
     });
 </script>

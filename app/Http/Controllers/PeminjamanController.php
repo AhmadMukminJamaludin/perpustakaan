@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Keranjang;
 use App\Models\Peminjaman;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -52,5 +53,33 @@ class PeminjamanController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+    
+    public function getOverduePeminjaman(Request $request)
+    {
+        $query = Peminjaman::with(['user:id,name', 'buku:id,judul'])
+            ->where('status', '<>', 'Dikembalikan')
+            ->whereDate('tanggal_kembali', '<', Carbon::today());
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('user', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })->orWhereHas('buku', function ($q) use ($search) {
+                    $q->where('judul', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        $overduePeminjaman = $query->orderBy('tanggal_kembali', 'asc')
+            ->get()
+            ->map(function ($item) {
+                $item->formatted_tanggal_kembali = Carbon::parse($item->tanggal_kembali)->translatedFormat('d F Y');
+                return $item;
+            });
+
+        return response()->json($overduePeminjaman);
     }
 }
