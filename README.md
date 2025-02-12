@@ -29,8 +29,8 @@ Sistem Perpustakaan adalah aplikasi berbasis web yang dikembangkan menggunakan *
 ## 🚀 Instalasi dan Konfigurasi
 ### 1️⃣ Clone Repository
 ```bash
-git clone https://github.com/username/sistem-perpustakaan.git
-cd sistem-perpustakaan
+git clone https://github.com/username/perpustakaan.git
+cd perpustakaan
 ```
 
 ### 2️⃣ Install Dependencies
