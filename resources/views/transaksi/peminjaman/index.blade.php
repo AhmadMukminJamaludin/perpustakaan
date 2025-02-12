@@ -43,7 +43,7 @@
                                     <td>{{ optional($peminjaman->tanggal_kembali)->format('d-m-Y') ?? '-' }}</td>
                                     <td>
                                         @if ($peminjaman->status === 'dikembalikan')
-                                            <span class="badge badge-success">Dikembalikan</span>
+                                            <span class="badge badge-success">Dikembalikan</span> <br> {{ optional($peminjaman->tanggal_dikembalikan)->format('d-m-Y') ?? '-' }}
                                         @elseif ($peminjaman->tanggal_kembali && $peminjaman->tanggal_kembali->isPast())
                                             <span class="badge badge-danger">Terlambat</span>
                                         @else
