@@ -10,8 +10,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Daftar Peminjaman</h3>
                 </div>
-                <div class="card-body table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" style="font-size: 10px;" id="table-peminjaman">
+                <div class="card-body table-responsive" style="font-size: 10px;" >
+                    <table class="table table-bordered table-hover dataTable dtr-inline" id="table-peminjaman">
                         <thead class="text-center align-middle">
                             <tr>
                                 <th>No</th>
@@ -59,17 +59,17 @@
                                     @if (Auth::user()->hasRole('admin'))
                                         <td class="text-nowrap">
                                             @if ($peminjaman->status === 'menunggu verifikasi')
-                                                <button class="btn btn-primary btn-sm btn-verifikasi" style="font-size: 10px" data-id="{{ $peminjaman->id }}" data-user="{{ $peminjaman->user->name }}" data-email="{{ $peminjaman->user->email }}">
+                                                <button class="btn btn-primary btn-xs btn-verifikasi" style="font-size: 10px" data-id="{{ $peminjaman->id }}" data-user="{{ $peminjaman->user->name }}" data-email="{{ $peminjaman->user->email }}">
                                                     <i class="fas fa-check-circle mr-1"></i> Verifikasi
                                                 </button>
                                             @elseif ($peminjaman->status === 'dipinjam')
-                                                <button class="btn btn-success btn-sm btn-kembalikan" style="font-size: 10px"
+                                                <button class="btn btn-success btn-xs btn-kembalikan" style="font-size: 10px"
                                                     data-id="{{ $peminjaman->id }}"
                                                     data-judul="{{ $peminjaman->buku->judul }}">
                                                     <i class="fa fa-check"></i> Dikembalikan
                                                 </button>                                    
                                             @endif
-                                            <button class="btn btn-warning btn-sm edit-peminjaman" style="font-size: 10px"
+                                            <button class="btn btn-warning btn-xs edit-peminjaman" style="font-size: 10px"
                                                 data-id="{{ $peminjaman->id }}"
                                                 data-user="{{ $peminjaman->user->name }}"
                                                 data-buku="{{ $peminjaman->buku->judul }}"
