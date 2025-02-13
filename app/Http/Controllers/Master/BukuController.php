@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Master;
 use App\Http\Controllers\Controller;
 use App\Models\Buku;
 use App\Models\Kategori;
+use App\Models\Peminjaman;
 use App\Models\Penerbit;
 use App\Models\Penulis;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -125,6 +127,24 @@ class BukuController extends Controller
         }
     }
     
+    public function getPeminjam($id)
+    {
+        $peminjaman = Peminjaman::with('user')
+            ->where('buku_id', $id)
+            ->where('status', '<>', 'Dikembalikan')
+            ->orderBy('tanggal_pinjam', 'desc')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'user' => $item->user->name,
+                    'tanggal_pinjam' => Carbon::parse($item->tanggal_pinjam)->translatedFormat('d F Y'),
+                    'tanggal_kembali' => $item->tanggal_kembali ? Carbon::parse($item->tanggal_kembali)->translatedFormat('d F Y') : null
+                ];
+            });
+
+        return response()->json($peminjaman);
+    }
+
 
     public function destroy($id)
     {
