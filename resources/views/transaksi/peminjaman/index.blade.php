@@ -93,6 +93,14 @@
                                                     <i class="fas fa-exclamation-triangle"></i> Laporkan Hilang
                                                 </button>                              
                                             @endif
+                                            @if ($peminjaman->total_denda > 0 && !$peminjaman->tagihan)
+                                                <button class="btn btn-info btn-xs btn-bayar-denda" style="font-size: 10px"
+                                                    data-id="{{ $peminjaman->id }}"
+                                                    data-user="{{ $peminjaman->user_id }}"
+                                                    data-denda="{{ $peminjaman->total_denda }}">
+                                                    <i class="fas fa-credit-card mr-1"></i> Penagihan
+                                                </button>
+                                            @endif
                                             <button class="btn btn-warning btn-xs edit-peminjaman" style="font-size: 10px"
                                                 data-id="{{ $peminjaman->id }}"
                                                 data-user="{{ $peminjaman->user->name }}"
@@ -120,6 +128,13 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+
+<!-- Midtrans Snap.js (gunakan sandbox atau production sesuai konfigurasi) -->
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+
+@endpush
 
 @push('scripts')
 <script>
@@ -396,6 +411,51 @@
                     batal: {
                         text: "Batal",
                         action: function () { /* Tidak melakukan apa-apa */ }
+                    }
+                }
+            });
+        });
+        $(document).on('click', '.btn-bayar-denda', function () {
+            var peminjamanId = $(this).data('id');
+            var userId = $(this).data('user');
+            var totalDenda = $(this).data('denda');
+
+            $.confirm({
+                title: 'Penagihan Denda',
+                content: `
+                    <div class="text-center">
+                        <p>Total Denda: <strong>Rp ${Number(totalDenda).toLocaleString('id-ID')}</strong></p>
+                        <p>Silakan klik tombol "Buat Penagihan" untuk melanjutkan proses penagihan denda.</p>
+                    </div>
+                `,
+                type: 'blue',
+                icon: 'fas fa-credit-card',
+                buttons: {
+                    bayar: {
+                        text: 'Buat Penagihan',
+                        btnClass: 'btn-success',
+                        action: function () {
+                            // Buat transaksi pembayaran denda via Midtrans
+                            axios.post('{{ route("pembayaran_denda.create_transaction") }}', {
+                                peminjaman_id: peminjamanId,
+                                user_id: userId,
+                                amount: totalDenda
+                            })
+                            .then(function (response) {
+                                $.alert('Penagihan Berhasil Disimpan!');
+                                setInterval(() => {
+                                    location.reload();
+                                }, 2000);
+                            })
+                            .catch(function (error) {
+                                $.alert('Gagal membuat penagihan.');
+                                console.error(error.response.data);
+                            });
+                        }
+                    },
+                    batal: {
+                        text: 'Batal',
+                        btnClass: 'btn-red'
                     }
                 }
             });

@@ -61,6 +61,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/peminjaman/{id}/update', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'update'])->name('peminjaman.update');
         Route::post('/peminjaman/kembalikan', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'kembalikan'])->name('peminjaman.kembalikan');
         Route::post('/peminjaman/laporkan-hilang', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'updateStatusHilang'])->name('peminjaman.hilang');
+        Route::get('/pembayaran-denda', [\App\Http\Controllers\Transaksi\PaymentDendaController::class, 'index'])->name('pembayaran_denda.index');
+        Route::post('/pembayaran-denda/transaksi', [\App\Http\Controllers\Transaksi\PaymentDendaController::class, 'createTransaction'])->name('pembayaran_denda.create_transaction');
     });
 });
 

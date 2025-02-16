@@ -98,4 +98,9 @@ class Peminjaman extends Model
     {
         return $this->belongsTo(Buku::class);
     }
+
+    public function tagihan()
+    {
+        return $this->hasOne(PenagihanDenda::class, 'peminjaman_id', 'id');
+    }
 }
