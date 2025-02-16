@@ -63,7 +63,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/peminjaman/laporkan-hilang', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'updateStatusHilang'])->name('peminjaman.hilang');
         Route::get('/pembayaran-denda', [\App\Http\Controllers\Transaksi\PaymentDendaController::class, 'index'])->name('pembayaran_denda.index');
         Route::post('/pembayaran-denda/transaksi', [\App\Http\Controllers\Transaksi\PaymentDendaController::class, 'createTransaction'])->name('pembayaran_denda.create_transaction');
+        Route::post('/pembayaran-denda/bayar', [\App\Http\Controllers\Transaksi\PaymentDendaController::class, 'createPayment'])->name('pembayaran_denda.create_payment');
     });
+
+    Route::post('/midtrans/notification', [\App\Http\Controllers\Transaksi\PaymentDendaController::class, 'notificationHandler'])->name('midtrans.notification');
 });
 
 require __DIR__.'/auth.php';

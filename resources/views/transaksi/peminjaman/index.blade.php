@@ -129,13 +129,6 @@
 </div>
 @endsection
 
-@push('styles')
-
-<!-- Midtrans Snap.js (gunakan sandbox atau production sesuai konfigurasi) -->
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
-
-@endpush
-
 @push('scripts')
 <script>
     $(document).ready(function() {

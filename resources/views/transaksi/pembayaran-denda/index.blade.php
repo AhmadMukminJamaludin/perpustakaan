@@ -63,7 +63,14 @@
                                     </td>
                                     @if (Auth::user()->hasRole('admin'))
                                         <td class="text-nowrap">
-
+                                            @if ($item->payment_status != 'settlement')
+                                                <button class="btn btn-info btn-xs btn-bayar-denda" style="font-size: 10px"
+                                                    data-id="{{ $item->id }}"
+                                                    data-amount="{{ $item->peminjaman->total_denda }}"
+                                                    data-order="{{ $item->order_id }}">
+                                                    <i class="fas fa-credit-card mr-1"></i> Bayar Denda
+                                                </button>
+                                            @endif
                                         </td>
                                     @endif
                                 </tr>
@@ -76,11 +83,52 @@
     </div>
 </div>
 @endsection
+    
+@push('styles')
+
+<!-- Axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<!-- Midtrans Snap.js (gunakan sandbox atau production sesuai konfigurasi) -->
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+
+@endpush
 
 @push('scripts')
 <script>
     $(document).ready(function () {
         $('#table-tagihan').DataTable();
+    });
+
+    $(document).on('click', '.btn-bayar-denda', function() {
+        var tagihanId = $(this).data('id');
+        var amount = $(this).data('amount');
+        var orderId = $(this).data('order');
+
+        axios.post('{{ route("pembayaran_denda.create_payment") }}', {
+            tagihan_id: tagihanId,
+            amount: amount
+        })
+        .then(function(response) {
+            var snapToken = response.data.snapToken;
+            snap.pay(snapToken, {
+                onSuccess: function(result) {
+                    $.alert('Pembayaran berhasil!');
+                    location.reload();
+                },
+                onPending: function(result) {
+                    $.alert('Pembayaran sedang diproses, silakan tunggu.');
+                    location.reload();
+                },
+                onError: function(result) {
+                    $.alert('Pembayaran gagal, silakan coba lagi.');
+                }
+            });
+        })
+        .catch(function(error) {
+            $.alert('Gagal membuat transaksi pembayaran.');
+            console.error(error.response ? error.response.data : error);
+        });
     });
 </script>
 @endpush
