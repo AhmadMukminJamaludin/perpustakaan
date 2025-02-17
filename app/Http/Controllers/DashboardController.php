@@ -23,7 +23,6 @@ class DashboardController extends Controller
 
         $peminjamanPerBulan = Peminjaman::selectRaw('MONTH(tanggal_pinjam) as bulan, COUNT(*) as total')
             ->whereYear('tanggal_pinjam', Carbon::now()->year)
-            ->where('status', 'dipinjam')
             ->groupBy('bulan')
             ->pluck('total', 'bulan');
 
