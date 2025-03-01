@@ -27,7 +27,7 @@ class DashboardController extends Controller
             ->pluck('total', 'bulan');
 
         $overduePeminjaman = Peminjaman::with(['user', 'buku'])
-            ->where('status', '<>', 'Dikembalikan')
+            ->where('status', '<>', 'dikembalikan')
             ->whereDate('tanggal_kembali', '<', Carbon::today())
             ->get();
 
