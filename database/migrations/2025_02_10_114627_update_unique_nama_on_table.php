@@ -9,11 +9,11 @@ return new class extends Migration
 {
     public function up()
     {
-        // Hapus indeks unik lama jika ada
-        DB::statement('DROP INDEX IF EXISTS kategori_nama_unique');
-        DB::statement('DROP INDEX IF EXISTS penerbit_nama_unique');
-        DB::statement('DROP INDEX IF EXISTS penerbit_email_unique');
-        DB::statement('DROP INDEX IF EXISTS penulis_email_unique');
+        // Hapus constraint unik lama jika ada
+        DB::statement('ALTER TABLE kategori DROP CONSTRAINT IF EXISTS kategori_nama_unique');
+        DB::statement('ALTER TABLE penerbit DROP CONSTRAINT IF EXISTS penerbit_nama_unique');
+        DB::statement('ALTER TABLE penerbit DROP CONSTRAINT IF EXISTS penerbit_email_unique');
+        DB::statement('ALTER TABLE penulis DROP CONSTRAINT IF EXISTS penulis_email_unique');
 
         // Update tabel kategori
         Schema::table('kategori', function (Blueprint $table) {
