@@ -12,28 +12,29 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Buat tipe ENUM baru
+        // 1. Buat ENUM baru
         DB::statement("CREATE TYPE status_enum AS ENUM ('dipinjam', 'dikembalikan', 'terlambat', 'menunggu verifikasi');");
 
-        Schema::table('peminjaman', function (Blueprint $table) {
-            $table->decimal('denda', 10, 2)->nullable()->after('tanggal_kembali');
+        // 2. Hapus default value sebelum mengubah tipe
+        DB::statement("ALTER TABLE peminjaman ALTER COLUMN status DROP DEFAULT;");
 
-            // Ubah kolom status menjadi tipe ENUM baru
-            DB::statement("ALTER TABLE peminjaman ALTER COLUMN status TYPE status_enum USING status::text::status_enum;");
-        });
+        // 3. Ubah tipe data status ke ENUM
+        DB::statement("ALTER TABLE peminjaman ALTER COLUMN status TYPE status_enum USING status::text::status_enum;");
+
+        // 4. Set default value kembali
+        DB::statement("ALTER TABLE peminjaman ALTER COLUMN status SET DEFAULT 'menunggu verifikasi';");
     }
 
     public function down(): void
     {
-        Schema::table('peminjaman', function (Blueprint $table) {
-            // Ubah kembali ke ENUM lama dengan tiga nilai
-            DB::statement("ALTER TABLE peminjaman ALTER COLUMN status TYPE VARCHAR(255);");
+        // 1. Hapus default value sebelum rollback
+        DB::statement("ALTER TABLE peminjaman ALTER COLUMN status DROP DEFAULT;");
 
-            // Hapus tipe ENUM
-            DB::statement("DROP TYPE status_enum;");
+        // 2. Ubah kembali ke VARCHAR
+        DB::statement("ALTER TABLE peminjaman ALTER COLUMN status TYPE VARCHAR(255) USING status::text;");
 
-            // Hapus kolom denda
-            $table->dropColumn('denda');
-        });
+        // 3. Hapus tipe ENUM
+        DB::statement("DROP TYPE status_enum;");
     }
+
 };
