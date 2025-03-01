@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('keranjang', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('buku_id', 36);
+            $table->uuid('buku_id');
             $table->foreign('buku_id')->references('id')->on('buku')->onDelete('cascade');
             $table->timestamps();
         });
