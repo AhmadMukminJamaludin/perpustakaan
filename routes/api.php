@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\BukuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,5 +14,6 @@ use App\Http\Controllers\Api\BukuController;
 */
 
 Route::middleware('api')->group(function () {
-    Route::get('/books', [BukuController::class, 'index']);
+    Route::get('/books', [\App\Http\Controllers\Api\BukuController::class, 'index']);
+    Route::get('/categories', [\App\Http\Controllers\Api\BukuController::class, 'categories']);
 });

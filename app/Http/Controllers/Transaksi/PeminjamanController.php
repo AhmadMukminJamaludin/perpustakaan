@@ -76,4 +76,39 @@ class PeminjamanController extends Controller
         ]);
     }
 
+    public function updateStatusHilang(Request $request)
+    {
+        $request->validate([
+            'buku_id' => 'required|exists:buku,id',
+            'denda_kehilangan' => 'required|numeric|min:0',
+            'alasan' => 'required|string|max:255',
+        ]);
+    
+        try {
+            Peminjaman::where('buku_id', $request->buku_id)
+                ->where('status', 'Dipinjam')
+                ->update([
+                    'status' => 'hilang',
+                    'denda_kehilangan' => $request->denda_kehilangan,
+                    'keterangan_kehilangan' => $request->alasan,
+                ]);
+    
+            return response()->json(['message' => 'Laporan berhasil disimpan'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Terjadi kesalahan'], 500);
+        }
+    }
+
+    public function batalHilang($id)
+    {
+        $peminjaman = Peminjaman::findOrFail($id);
+
+        $peminjaman->update([
+            'status' => 'dipinjam',
+            'denda_kehilangan' => 0,
+            'keterangan_kehilangan' => "",
+        ]);
+
+        return response()->json(['message' => 'Laporan hilang berhasil dibatalkan.']);
+    }
 }
