@@ -21,10 +21,10 @@ class DashboardController extends Controller
             ->where('tanggal_kembali', '<', Carbon::now())
             ->count();
 
-        $peminjamanPerBulan = Peminjaman::selectRaw('MONTH(tanggal_pinjam) as bulan, COUNT(*) as total')
+        $peminjamanPerBulan = Peminjaman::selectRaw('EXTRACT(MONTH FROM tanggal_pinjam) as bulan, COUNT(*) as total')
             ->whereYear('tanggal_pinjam', Carbon::now()->year)
             ->groupBy('bulan')
-            ->pluck('total', 'bulan');
+            ->pluck('total', 'bulan');        
 
         $overduePeminjaman = Peminjaman::with(['user', 'buku'])
             ->where('status', '<>', 'dikembalikan')
