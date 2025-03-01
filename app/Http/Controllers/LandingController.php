@@ -27,7 +27,7 @@ class LandingController extends Controller
         $bukuDipinjam = [];
         if (Auth::check()) {
             $bukuDipinjam = Peminjaman::where('user_id', Auth::id())
-                ->where('status', '<>', 'Dikembalikan')
+                ->where('status', '<>', 'dikembalikan')
                 ->pluck('buku_id')
                 ->toArray();
         }

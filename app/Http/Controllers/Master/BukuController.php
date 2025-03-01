@@ -131,7 +131,7 @@ class BukuController extends Controller
     {
         $peminjaman = Peminjaman::with('user')
             ->where('buku_id', $id)
-            ->where('status', '<>', 'Dikembalikan')
+            ->where('status', '<>', 'dikembalikan')
             ->orderBy('tanggal_pinjam', 'desc')
             ->get()
             ->map(function ($item) {

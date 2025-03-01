@@ -58,7 +58,7 @@ class PeminjamanController extends Controller
     public function getOverduePeminjaman(Request $request)
     {
         $query = Peminjaman::with(['user:id,name', 'buku:id,judul'])
-            ->where('status', '<>', 'Dikembalikan')
+            ->where('status', '<>', 'dikembalikan')
             ->whereDate('tanggal_kembali', '<', Carbon::today());
 
         if ($request->filled('search')) {
