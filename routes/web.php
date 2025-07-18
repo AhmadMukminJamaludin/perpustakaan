@@ -62,6 +62,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/peminjaman/{id}/update', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'update'])->name('peminjaman.update');
         Route::post('/peminjaman/kembalikan', [\App\Http\Controllers\Transaksi\PeminjamanController::class, 'kembalikan'])->name('peminjaman.kembalikan');
     });
+
+    Route::prefix('laporan')->group(function () {
+        Route::get('/peminjaman', [\App\Http\Controllers\Laporan\PeminjamanController::class, 'index'])->name('laporan.peminjaman.index');
+        Route::get('/export-excel', [\App\Http\Controllers\Laporan\PeminjamanController::class, 'exportExcel'])->name('laporan.peminjaman.exportExcel');
+        Route::get('/print',        [\App\Http\Controllers\Laporan\PeminjamanController::class, 'printPdf'])->name('laporan.peminjaman.printPdf');
+    });
 });
 
 require __DIR__.'/auth.php';

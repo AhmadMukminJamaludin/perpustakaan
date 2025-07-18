@@ -15,5 +15,5 @@ use App\Http\Controllers\Api\BukuController;
 */
 
 Route::middleware('api')->group(function () {
-    Route::get('/books', [BukuController::class, 'index']);
+    // Route::get('/books', [BukuController::class, 'index']);
 });
